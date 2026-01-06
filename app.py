@@ -63,6 +63,10 @@ def to_thesis():
 def to_vnmap():
     return render_template('3d_vietnamese_map/vnmap.html')
 
+@app.route('/timeline')
+def to_parallax():
+    return render_template('parallax/timeline.html')
+
 @app.route('/gallery/')
 def to_gallery():
     # gallery.html not present; show a simple placeholder list or redirect
@@ -183,6 +187,10 @@ def vnmap_alias():
 @app.route('/thesis_archive/thesis')
 def thesis_archive_alias():
     return render_template('thesis_archive/thesis.html')
+
+@app.route('/parallax/timeline')
+def parallax_alias():
+    return render_template('parallax/timeline.html')
 
 @app.route('/quiz/learning')
 def quiz_learning_alias():
