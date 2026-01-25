@@ -37,8 +37,18 @@
                     contentHtml = tmp.innerHTML;
                 } catch (e) {
                     // ignore
+                    // ignore
                 }
                 document.getElementById('content').innerHTML = contentHtml;
+                
+                // Re-execute scripts in the new content
+                const scripts = document.getElementById('content').querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
             } catch (err) {
                 document.getElementById('content').innerHTML = html;
             }

@@ -1,14 +1,11 @@
-from flask import Flask, render_template,request, abort
+from flask import Flask, render_template, request, abort, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql.expression import func
+from sqlalchemy.sql.expression import func, or_
 from flask import jsonify
 import random
 import os
 from utils.nav import get_nav_items
 from utils.quiz_db import get_random_questions, get_question_by_id
-"https://www.vnam.edu.vn/Categories.aspx?lang=&CatID=12&SubID=47"
-"https://docs.sqlalchemy.org/en/20/tutorial/orm_data_manipulation.html"
-"code to active: . ./venv_name/bin/activate"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -24,6 +21,13 @@ def inject_nav():
     except Exception:
         nav_items = []
     return {'nav_items': nav_items}
+
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 class STUDENT(db.Model):
     ID = db.Column(db.String(255), primary_key=True, nullable=False)
@@ -61,11 +65,7 @@ def to_thesis():
 
 @app.route('/vnmap')
 def to_vnmap():
-    return render_template('3d_vietnamese_map/vnmap.html')
-
-@app.route('/timeline')
-def to_parallax():
-    return render_template('parallax/timeline.html')
+    return render_template('vnmap.html')
 
 @app.route('/gallery/')
 def to_gallery():
@@ -87,20 +87,13 @@ def to_library():
 def to_music_library_alias():
     return render_template('music_library/library.html')
 
-@app.route('/gallery/development')
-def to_development():
-    # development page missing; render home as fallback
-    return render_template('home.html')
-
 @app.route('/music_world/')
 def to_musicworld():
-    # musicworld template moved; show library view instead
-    return render_template('music_library/library.html')
+    return render_template('music_world.html')
 
 @app.route('/music_world/3dpreview/')
 def to_3dpreview():
     return render_template('3d_model_viewer/3dpreview.html')
-
 @app.route('/music_world/3dpreview/<string:inname>')
 def render_3d(inname):
     filename= inname+ ".glb"
@@ -111,12 +104,25 @@ def test_db():
     profiles = db.session.query(STUDENT).all()
     return render_template('quiz/testdb.html', profiles=profiles)
 
-@app.route('/library/search', methods=["POST"])
+@app.route('/thesis/search')
 def search_thesis():
-    name = request.form.get("Search")
-    result = db.session.execute(db.select(Thesis).where((Thesis.Name+Thesis.ID+Thesis.Author+Thesis.Supervisor+Thesis.Category).like(f'%{name}%'))).scalars()
+    q = request.args.get("q", "")
+    search_pattern = f"%{q}%"
+    result = db.session.execute(db.select(Thesis).where(or_(
+        Thesis.Name.like(search_pattern),
+        Thesis.ID.like(search_pattern),
+        Thesis.Author.like(search_pattern),
+        Thesis.Supervisor.like(search_pattern),
+        Thesis.Category.like(search_pattern)
+    ))).scalars()
     return render_template('thesis_archive/thesis_search_result.html', result = result)
     
+@app.route('/thesis/<thesisname>')
+def serve_thesis_pdf(thesisname):
+    filename = f"{os.path.basename(thesisname)}.pdf"
+    directory = os.path.join(app.root_path, 'templates')
+    return send_from_directory(directory, filename, as_attachment=False)
+
 @app.route('/quiz/')
 def to_quiz():
     return render_template('quiz/quiz.html')
@@ -126,44 +132,41 @@ def to_quest():
     data = get_random_questions(db, limit=3)
     return render_template('quiz/question.html', questions=data)
 
+def fetch_all_relevant_questions(form_keys):
+    question_ids = list(form_keys)
+    questions_db = db.session.execute(db.select(question).where(question.ID.in_(question_ids))).scalars().all()
+    return {q.ID: q for q in questions_db}
+
+def compare_user_answer(user_answer, correct_answer):
+    return user_answer == correct_answer
+
+def save_details_for_result_page(actual_question, user_answer, is_correct):
+    return {
+        'question': actual_question.QName,
+        'your_answer': user_answer,
+        'correct_answer': actual_question.CorrectA,
+        'is_correct': is_correct
+    }
 
 @app.route("/submit-quiz", methods=["POST"])
 def submit_quiz():
     score = 0
     total_questions = 0
     results_summary = []
-
-    # request.form is a dictionary of { "name_attribute": "value_selected" }
-    # In your case: { "QuestionID": "User's Choice String" }
     
-    for q_id, user_answer in request.form.items():
-        # Safety Check: In case you have other inputs like CSRF tokens or submit buttons,
-        # ensure q_id is actually a number before querying the DB.
-        
+    question_map = fetch_all_relevant_questions(request.form.keys())
 
-        # 1. Fetch the actual question from the DB using the ID from the form
-        # (Using the same style as your earlier code)
-        actual_question = get_question_by_id(db, q_id)
+    for q_id, user_answer in request.form.items():
+        actual_question = question_map.get(q_id)
 
         if actual_question:
             total_questions += 1
-            is_correct = False
-            
-            # 2. Compare User Answer vs Correct Answer
-            # Note: Ensure you compare strings to strings
-            if user_answer == actual_question.CorrectA:
+            is_correct = compare_user_answer(user_answer, actual_question.CorrectA)
+            if is_correct:
                 score += 1
-                is_correct = True
             
-            # 3. (Optional) Save details to display on a results page
-            results_summary.append({
-                'question': actual_question.QName,
-                'your_answer': user_answer,
-                'correct_answer': actual_question.CorrectA,
-                'is_correct': is_correct
-            })
+            results_summary.append(save_details_for_result_page(actual_question, user_answer, is_correct))
 
-    # 4. Pass the final data to a results template
     return render_template('quiz/quiz_result.html', 
                            score=score, 
                            total=total_questions, 
@@ -180,17 +183,10 @@ def spa_catch_all(subpath: str):
 
 
 # Alias routes to match nav hrefs created from templates folder
-@app.route('/3d_vietnamese_map/vnmap')
-def vnmap_alias():
-    return render_template('3d_vietnamese_map/vnmap.html')
 
 @app.route('/thesis_archive/thesis')
 def thesis_archive_alias():
     return render_template('thesis_archive/thesis.html')
-
-@app.route('/parallax/timeline')
-def parallax_alias():
-    return render_template('parallax/timeline.html')
 
 @app.route('/quiz/learning')
 def quiz_learning_alias():

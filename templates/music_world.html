@@ -14,7 +14,6 @@
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <meta charset="utf-8">
     <title>The Gioi Am Nhac</title>
-    </script>
 
     <script type="module">
     import * as THREE from 'three';
@@ -60,6 +59,7 @@
   </script>
   </head>
   <body>
+    {% include 'header.html' %}
     {% include '3d_model_viewer/sidebar.html' %}
 
     <script>

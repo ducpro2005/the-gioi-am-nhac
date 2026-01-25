@@ -1,86 +1,98 @@
+@import url("https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css");
+
 .element1 {
-  background-color: rgba(128, 128, 128, 0.8);
-  border-radius: 15px;
-  padding: 10px;
-  margin: 10px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0; /* slate-200 */
+  border-left: 5px solid #0284c7; /* sky-600 */
+  border-radius: 6px;
+  padding: 20px;
+  margin: 15px 0;
   text-align: center;
-  height: 200px;
+  height: auto;
+  min-height: 200px;
   width: auto;
   font-size : 32px;
+  color: #1e293b; /* slate-800 */
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 .element2 {
-  background-color: rgba(200, 200, 200, 0.6);
-  border-radius: 15px;
-  padding: 10px;
-  margin: 10px;
+  background-color: #f8fafc; /* slate-50 */
+  border: 1px solid #e2e8f0; /* slate-200 */
+  border-radius: 6px;
+  padding: 20px;
+  margin: 15px 0;
   text-align: center;
-  height: 200px;
+  height: auto;
+  min-height: 200px;
   width: auto;
   font-size : 18px;
+  color: #475569; /* slate-600 */
 }
 .placeholder {
-  background-color: rgba(128, 128, 128, 0.4);
+  background-color: #e2e8f0; /* slate-200 */
+  color: #94a3b8; /* slate-400 */
 }
 
-/* YouTube Dark Theme Navbar Styling */
 * {
   box-sizing: border-box;
 }
 
 body {
-  background-color: #0f0f0f;
-  color: #f1f1f1;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #f1f5f9; /* slate-100 */
+  color: #1e293b; /* slate-800 */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
 
 header {
-  background-color: #212121;
-  color: #f1f1f1;
-  padding: 8px 24px;
-  border-bottom: 1px solid #404040;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  background-color: #ffffff;
+  color: #1e293b;
+  padding: 10px 24px;
+  border-bottom: 1px solid #e2e8f0; /* slate-200 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 header h1 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 700;
   padding: 12px 0;
-  color: #f1f1f1;
+  color: #0284c7; /* sky-600 */
+  letter-spacing: -0.025em;
 }
 
 #main-nav {
-  margin: 8px 0 0 0;
+  margin: 10px 0 0 0;
   display: flex;
   flex-direction: row;
-  gap: 0;
+  gap: 15px;
   align-items: center;
   flex-wrap: wrap;
-  padding: 8px 0;
+  padding: 0;
 }
 
 .nav-home {
-  margin-right: 24px;
+  margin-right: 20px;
 }
 
 .nav-home a {
-  font-weight: 500;
-  font-size: 14px;
-  color: #f1f1f1;
+  font-weight: 600;
+  font-size: 15px;
+  color: #475569; /* slate-600 */
   text-decoration: none;
   padding: 8px 12px;
   display: inline-block;
-  border-radius: 2px;
-  transition: background-color 0.2s ease;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
 .nav-home a:hover {
-  background-color: #3f3f3f;
+  background-color: #e0f2fe; /* sky-100 */
+  color: #0369a1; /* sky-700 */
 }
 
 .nav-group {
@@ -96,36 +108,38 @@ header h1 {
 .nav-group-title {
   cursor: pointer;
   padding: 8px 12px;
-  font-weight: 500;
-  font-size: 14px;
-  color: #f1f1f1;
+  font-weight: 600;
+  font-size: 15px;
+  color: #475569; /* slate-600 */
   background-color: transparent;
-  border-radius: 2px;
-  transition: background-color 0.2s ease;
+  border-radius: 6px;
+  transition: all 0.2s ease;
   user-select: none;
-  margin-right: 8px;
+  margin-right: 5px;
   white-space: nowrap;
 }
 
 .nav-group-title:hover {
-  background-color: #3f3f3f;
+  color: #0284c7; /* sky-600 */
+  background-color: #f1f5f9; /* slate-100 */
 }
 
 .nav-group-items {
   position: absolute;
   top: 100%;
   left: 0;
-  padding: 8px 0;
-  margin-top: 4px;
+  padding: 5px 0;
+  margin-top: 2px;
   display: none;
   flex-direction: column;
   gap: 0;
-  background-color: #2f2f2f;
-  border: 1px solid #404040;
-  border-radius: 4px;
-  min-width: 200px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0; /* slate-200 */
+  border-radius: 8px;
+  min-width: 220px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   z-index: 200;
+  overflow: hidden;
 }
 
 .nav-group-items[style*="display: block"],
@@ -134,66 +148,94 @@ header h1 {
 }
 
 .nav-link {
-  color: #f1f1f1;
+  color: #475569; /* slate-600 */
   text-decoration: none;
-  padding: 10px 16px;
-  border-radius: 0;
-  font-size: 14px;
-  transition: background-color 0.15s ease;
-  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-block;
   white-space: nowrap;
-  width: 100%;
 }
 
 .nav-link:hover {
-  background-color: #3f3f3f;
-  padding-left: 16px;
+  background-color: #e0f2fe; /* sky-100 */
+  color: #0369a1; /* sky-700 */
 }
 
 /* Main content area */
 main#app {
-  padding: 20px 24px;
+  padding: 30px 24px;
   min-height: calc(100vh - 150px);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 #content {
-  padding: 20px;
-  background-color: #181818;
-  border-radius: 8px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px; /* rounded-lg */
   min-height: 400px;
-  color: #f1f1f1;
+  color: #1e293b; /* slate-800 */
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0; /* slate-200 */
+  position: relative; /* Ensure absolute children (like maps) are contained */
 }
 
 /* Responsive navbar for smaller screens */
 @media (max-width: 768px) {
   header {
-    padding: 8px 16px;
+    padding: 10px 16px;
   }
   
   header h1 {
-    font-size: 18px;
+    font-size: 20px;
   }
   
   #main-nav {
-    gap: 0;
+    gap: 10px;
   }
   
   .nav-home {
-    margin-right: 16px;
+    margin-right: 10px;
   }
   
   .nav-group-title {
-    padding: 6px 10px;
-    font-size: 13px;
-    margin-right: 4px;
+    padding: 8px 10px;
+    font-size: 14px;
+    margin-right: 0;
   }
   
   .nav-link {
-    font-size: 13px;
-    padding: 8px 12px;
+    font-size: 14px;
+    padding: 10px 16px;
   }
   
   .nav-group-items {
-    min-width: 160px;
+    min-width: 180px;
   }
+}
+
+/* Thesis Archive Styles */
+.thesis-container { max-width: 800px; margin: 20px auto; font-family: sans-serif; }
+.search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+.search-bar input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; transition: all 0.2s; }
+.search-bar input:focus { border-color: #0284c7; box-shadow: 0 0 0 3px #e0f2fe; }
+.search-bar button { padding: 10px 20px; background: #0284c7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+.search-bar button:hover { background: #0369a1; }
+#results-area { margin-top: 20px; }
+
+/* Thesis Search Result Styles */
+.thesis-card { border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 16px; border-radius: 8px; background: #fff; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+.thesis-card h3 { margin: 0 0 10px 0; }
+.thesis-card h3 a { text-decoration: none; color: #1e293b; font-weight: 600; }
+.thesis-card h3 a:hover { color: #0284c7; }
+.thesis-info { color: #64748b; font-size: 0.95em; margin-bottom: 4px; }
+.thesis-label { font-weight: 600; color: #475569; }
+
+#map {
+  width: 100%;
+  height: 600px;
+  border-radius: 8px;
 }

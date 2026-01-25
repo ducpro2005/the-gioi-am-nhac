@@ -2,8 +2,10 @@
 <html>
    <head>
       <title>Index Page</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
    </head>
    <body>
+      {% include 'header.html' %}
       <h3>Profiles</h3>
       <a href="/add_data">ADD</a>
       <br>

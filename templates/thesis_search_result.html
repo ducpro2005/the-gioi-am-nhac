@@ -1,0 +1,18 @@
+<html>
+    <body>
+        {% for r in result %}
+        <div class="thesis-card">
+            <h3><a href="/thesis/{{r.ID}}" target="_blank">{{r.Name}}</a></h3>
+            <div class="thesis-info">
+                <span class="thesis-label">Author:</span> {{r.Author}}
+            </div>
+            <div class="thesis-info">
+                <span class="thesis-label">Category:</span> {{r.Category}} | 
+                <span class="thesis-label">Supervisor:</span> {{r.Supervisor}}
+            </div>
+        </div>
+        {% else %}
+        <p>No results found.</p>
+        {% endfor %}
+    </body>
+</html>

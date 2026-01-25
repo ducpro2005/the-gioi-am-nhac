@@ -1,7 +1,9 @@
+<!DOCTYPE html>
 <head>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    {% include 'header.html' %}
     <a href="/quiz/question">
    <button>START QUIZ</button>
 </a>

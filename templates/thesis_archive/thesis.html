@@ -1,6 +1,37 @@
+<!DOCTYPE html>
 <head>
-
+    <title>Thesis Archive</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <p>THESIS IS IN DEVELOPMENT</p>
+    {% include 'header.html' %}
+    <div class="thesis-container">
+        <h1>Thesis Archive</h1>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search by title, author, or category..." onkeydown="if(event.key==='Enter') searchThesis()">
+            <button onclick="searchThesis()">Search</button>
+        </div>
+        <div id="results-area"></div>
+    </div>
+
+    <script>
+        async function searchThesis() {
+            const query = document.getElementById('search-input').value;
+            const container = document.getElementById('results-area');
+            container.innerHTML = '<p>Searching...</p>';
+            try {
+                const res = await fetch(`/thesis/search?q=${encodeURIComponent(query)}`);
+                const html = await res.text();
+                // Parse the response to extract body content if it's a full page
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                // Remove header from the fetched content if present (to avoid nesting headers in search results)
+                const header = doc.querySelector('header');
+                if (header) header.remove();
+                container.innerHTML = doc.body ? doc.body.innerHTML : html;
+            } catch (err) {
+                container.innerHTML = '<p>Error loading results.</p>';
+            }
+        }
+    </script>
 </body>
